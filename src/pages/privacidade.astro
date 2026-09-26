@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../config/site';
+import { buildWhatsAppUrl } from '../lib/whatsapp';
+
+const whatsappUrl = buildWhatsAppUrl(siteConfig.whatsappDigits);
+const responsible = siteConfig.responsibleDisplayName;
+---
+<BaseLayout
+  title="Privacidade — Rabik"
+  description="Como este site trata dados: sem analytics, sem cookies de marketing e sem formulário enviado para servidores da Rabik."
+  path="/privacidade/"
+>
+  <section class="section" aria-labelledby="page-title">
+    <div class="container prose">
+      <p class="eyebrow">Aviso de privacidade</p>
+      <h1 id="page-title">Privacidade</h1>
+      <p class="lead">Este aviso descreve o que este site realmente faz com dados. Ele é curto porque o site trata poucos dados.</p>
+
+      <h2>Quem é responsável</h2>
+      {responsible ? (
+        <p>O responsável por este site é {responsible}.</p>
+      ) : (
+        <p class="pending">Identificação do responsável em configuração. Esta informação será incluída antes da publicação definitiva do site.</p>
+      )}
+
+      <h2>O que o site não usa</h2>
+      <ul>
+        <li>Não há ferramentas de estatística (analytics), pixels de anúncios ou cookies de marketing.</li>
+        <li>Não há cadastro, login ou área de cliente.</li>
+        <li>Não há formulário que envie dados para servidores da Rabik.</li>
+      </ul>
+
+      <h2>Mensagens para o WhatsApp</h2>
+      <p>
+        Os botões de conversa preparam uma mensagem pronta. Na seção de soluções, você pode editar essa mensagem na
+        própria página: o texto fica só na memória da página enquanto ela está aberta, sem ser salvo no navegador nem
+        enviado a terceiros pelo site.
+      </p>
+      <p>
+        Ao clicar em um botão de conversa, você abre voluntariamente o WhatsApp com a mensagem preenchida. Nada é enviado
+        automaticamente: você revisa e decide se envia. A partir daí, o tratamento das mensagens segue as regras do
+        WhatsApp e a conversa com a Rabik. Se você usar um botão de copiar, o texto vai para a área de transferência do
+        seu aparelho.
+      </p>
+
+      <h2>Hospedagem e registros técnicos</h2>
+      <p>
+        Como qualquer site, este é servido por um provedor de hospedagem, que pode registrar dados técnicos das requisições
+        (como endereço IP, data e navegador) para funcionamento e segurança. A ausência de um servidor próprio da Rabik não
+        significa que nenhum terceiro trate dados: esses registros seguem as políticas do provedor.
+      </p>
+      <p class="pending">Provedor de hospedagem em definição. O nome do provedor será informado aqui antes da publicação definitiva.</p>
+
+      <h2>Contato sobre privacidade</h2>
+      {whatsappUrl || siteConfig.contactEmail ? (
+        <p>
+          Para dúvidas sobre este aviso, fale pelo
+          {whatsappUrl && <> <a href={whatsappUrl} target="_blank" rel="noopener">WhatsApp</a></>}
+          {whatsappUrl && siteConfig.contactEmail && ' ou pelo e-mail '}
+          {!whatsappUrl && siteConfig.contactEmail && ' e-mail '}
+          {siteConfig.contactEmail && <a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a>}.
+        </p>
+      ) : (
+        <p class="pending">Canal de contato em configuração.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prose { max-width: calc(720px + 2 * var(--gutter)); display: grid; gap: 14px; }
+  h1 { font-size: clamp(2.25rem, 1.8rem + 1.6vw, 3rem); margin-bottom: 4px; }
+  h2 { font-size: 1.375rem; margin-top: 24px; }
+  .lead { font-size: 1.125rem; color: var(--muted); }
+  p, li { color: var(--muted); }
+  ul { padding-left: 20px; display: grid; gap: 6px; }
+  a { color: var(--blue-dark); font-weight: 600; }
+  .pending {
+    padding: 12px 14px;
+    border: 1.5px dashed var(--control-border);
+    border-radius: var(--radius-sm);
+    background: var(--paper-strong);
+    font-size: 0.9375rem;
+  }
+</style>

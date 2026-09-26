@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BrandMark from '../components/brand/BrandMark.astro';
+import Icon from '../components/ui/Icon.astro';
+---
+<BaseLayout title="Página não encontrada — Rabik" description="Esta página não existe ou mudou de endereço." path="/404/" noindex>
+  <section class="section" aria-labelledby="page-title">
+    <div class="container box">
+      <BrandMark class="mark" />
+      <p class="eyebrow">Erro 404</p>
+      <h1 id="page-title">Esta página se perdeu no caminho.</h1>
+      <p class="muted">O endereço pode ter mudado ou ter sido digitado com algum erro.</p>
+      <a class="btn btn-primary" href="/">Voltar ao início <Icon name="arrow" class="icon-arrow" /></a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .box { display: grid; gap: 14px; justify-items: start; max-width: calc(640px + 2 * var(--gutter)); padding-block: 40px; }
+  .box :global(.mark) { width: 120px; color: var(--ink); margin-bottom: 8px; transform: rotate(-6deg); }
+  h1 { font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem); }
+  .btn { margin-top: 8px; }
+</style>

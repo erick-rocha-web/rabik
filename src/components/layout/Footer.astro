@@ -1,0 +1,58 @@
+---
+import Logo from '../brand/Logo.astro';
+import { siteConfig } from '../../config/site';
+import { buildWhatsAppUrl } from '../../lib/whatsapp';
+
+const year = new Date().getFullYear();
+const whatsappUrl = buildWhatsAppUrl(siteConfig.whatsappDigits);
+---
+<footer class="site-footer">
+  <div class="container grid">
+    <div class="brand">
+      <a href="/" aria-label="Rabik, página inicial" class="brand-link"><Logo variant="stacked" /></a>
+      <p class="muted">Sites claros para negócios que querem aparecer bem. Desenvolvimento conduzido por Erick.</p>
+    </div>
+
+    <nav aria-label="Rodapé">
+      <h2 class="col-title">Navegação</h2>
+      <ul role="list">
+        <li><a href="/#como-funciona">Como funciona</a></li>
+        <li><a href="/#entregamos">O que entregamos</a></li>
+        <li><a href="/#investimento">Investimento</a></li>
+        <li><a href="/#duvidas">Dúvidas</a></li>
+        <li><a href="/privacidade/">Privacidade</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="col-title">Contato</h2>
+      <ul role="list">
+        {whatsappUrl ? (
+          <li><a href={whatsappUrl} rel="noopener" target="_blank">WhatsApp<span class="visually-hidden"> (abre em nova aba)</span></a></li>
+        ) : (
+          <li class="muted">WhatsApp em configuração</li>
+        )}
+        {siteConfig.contactEmail && <li><a href={`mailto:${siteConfig.contactEmail}`}>{siteConfig.contactEmail}</a></li>}
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <p class="legal small muted">© {year} Rabik.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer { padding-top: 48px; border-top: 1.5px solid var(--line); background: var(--paper-strong); }
+  .grid { display: grid; gap: 32px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1.6fr 1fr 1fr; } }
+  .brand { display: grid; gap: 14px; align-content: start; }
+  .brand p { max-width: 36ch; font-size: 0.9375rem; }
+  .brand-link { display: block; width: 130px; color: var(--ink); text-decoration: none; border-radius: 8px; }
+  .col-title { font-family: var(--font-display); font-size: 0.8125rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  ul { margin: 0; display: grid; }
+  li { font-size: 0.9375rem; }
+  li a { display: inline-flex; align-items: center; min-height: 40px; color: var(--ink); text-decoration: none; }
+  li a:hover { color: var(--blue-dark); text-decoration: underline; }
+  li.muted { min-height: 40px; display: flex; align-items: center; }
+  .legal { margin-top: 36px; padding-block: 18px calc(18px + env(safe-area-inset-bottom)); border-top: 1.5px solid var(--line); }
+</style>

@@ -1,0 +1,43 @@
+---
+/**
+ * Aplicações da logo oficial (vetorizada de logo_rabik.png), sempre monocromática via currentColor:
+ * escura no papel, branca em fundos azuis. Sem esticar nem recortar.
+ * - `header`: horizontal compacta, 34 px de altura (símbolo + RABIK lado a lado).
+ * - `stacked`: versão empilhada original (rodapé e CTA final).
+ * O nome acessível fica no link ou no texto ao redor.
+ */
+import BrandMark from './BrandMark.astro';
+import Wordmark from '../../assets/brand/rabik-wordmark.svg';
+import FullLogo from '../../assets/brand/rabik-logo.svg';
+
+interface Props {
+  variant?: 'header' | 'stacked';
+  class?: string;
+}
+const { variant = 'header', class: cls } = Astro.props;
+---
+{variant === 'header' ? (
+  <span class:list={['logo', 'logo-header', cls]}>
+    <BrandMark class="logo-mark" />
+    <Wordmark class="logo-word" aria-hidden="true" focusable="false" />
+  </span>
+) : (
+  <span class:list={['logo', 'logo-stacked', cls]}>
+    <FullLogo class="logo-full" aria-hidden="true" focusable="false" />
+  </span>
+)}
+
+<style>
+  .logo { display: inline-flex; align-items: center; line-height: 1; }
+  .logo-header { gap: 10px; }
+  .logo-header :global(.logo-mark) { height: 34px; width: auto; }
+  .logo-header :global(.logo-word) { height: 16px; width: auto; }
+  .logo-stacked :global(.logo-full) { width: 100%; height: auto; }
+
+  /* Detalhe discreto: o símbolo inclina um pouco no hover/foco do link. */
+  @media (prefers-reduced-motion: no-preference) {
+    .logo-header :global(.logo-mark) { transition: transform 220ms var(--ease-out); transform-origin: 50% 90%; }
+    :global(a:hover) > .logo-header :global(.logo-mark),
+    :global(a:focus-visible) > .logo-header :global(.logo-mark) { transform: rotate(-5deg); }
+  }
+</style>

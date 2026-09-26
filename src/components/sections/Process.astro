@@ -1,0 +1,94 @@
+---
+import Doodle from '../ui/Doodle.astro';
+import { basicOffer, inWords } from '../../config/offers';
+
+const steps = [
+  { title: 'Você conta', text: 'Entendemos seu negócio, seus serviços e o que o cliente precisa encontrar.', color: 'var(--yellow)' },
+  { title: 'A Rabik organiza', text: 'Definimos estrutura, visual, conteúdo, valor e prazo antes de começar.', color: 'var(--mint)' },
+  { title: 'Você acompanha', text: 'Recebe uma prévia e reúne seus ajustes dentro do escopo combinado.', color: 'var(--coral)' },
+  { title: 'A gente publica', text: 'Depois da aprovação, colocamos a página no ar e orientamos os próximos passos.', color: 'var(--blue)' },
+];
+---
+<section id="como-funciona" class="section" aria-labelledby="processo-title">
+  <div class="container">
+    <div class="head" data-reveal>
+      <div class="section-head">
+        <p class="eyebrow">Como funciona</p>
+        <h2 id="processo-title" class="section-title">Do “preciso de um site” até a publicação.</h2>
+      </div>
+      <p class="handwritten">
+        Sem reunião que poderia ser uma mensagem.
+        <Doodle name="squiggle" class="hw-line" />
+      </p>
+    </div>
+
+    <ol class="steps" role="list" data-reveal>
+      {steps.map((s, i) => (
+        <li class="step" style={`--c: ${s.color}`}>
+          <span class="num" aria-hidden="true">{i + 1}</span>
+          <h3><span class="visually-hidden">Passo {i + 1}: </span>{s.title}</h3>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ol>
+
+    <p class="deadline small" data-reveal>
+      No pacote básico, a produção leva até {inWords(basicOffer.productionBusinessDays)} dias úteis a partir da data
+      combinada, depois da entrada e com os materiais completos.
+    </p>
+  </div>
+</section>
+
+<style>
+  .head { display: grid; gap: 8px; align-items: end; margin-bottom: 36px; }
+  .head .section-head { margin-bottom: 0; }
+  @media (min-width: 900px) { .head { grid-template-columns: 1fr auto; gap: 40px; } }
+  .handwritten {
+    position: relative;
+    justify-self: start;
+    padding: 8px 14px 14px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-style: italic;
+    font-size: 1.0625rem;
+    transform: rotate(-2.5deg);
+    background: var(--white);
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+  }
+  .handwritten :global(.hw-line) { width: 90px; height: auto; color: var(--coral); margin-top: 2px; }
+
+  .steps { display: grid; gap: 16px; margin: 0; }
+  @media (min-width: 640px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1060px) { .steps { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+  .step {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 22px 22px 24px;
+    background: var(--paper-strong);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+  }
+  /* Número grande sobre um disco colorido; o algarismo é sempre escuro (contraste). */
+  .num {
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    border-radius: 50% 46% 52% 48%;
+    background: var(--c);
+    border: 2px solid var(--ink);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.875rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .step:nth-child(4) .num { color: var(--white); background: var(--action); }
+  .step h3 { font-size: 1.1875rem; }
+  .step p { color: var(--muted); font-size: 0.9375rem; line-height: 1.55; }
+  .deadline { margin-top: 24px; color: var(--muted); max-width: 70ch; }
+</style>

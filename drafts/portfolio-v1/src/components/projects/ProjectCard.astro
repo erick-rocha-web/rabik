@@ -1,0 +1,87 @@
+---
+import Icon from '../ui/Icon.astro';
+import Shot from '../ui/Shot.astro';
+import type { Project } from '../../data/projects';
+
+interface Props {
+  project: Project;
+  /** `wide`: card principal, imagem e texto lado a lado no desktop. */
+  variant?: 'wide' | 'default';
+  headingLevel?: 'h2' | 'h3';
+}
+const { project: p, variant = 'default', headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+const sizes =
+  variant === 'wide'
+    ? '(min-width: 1024px) 640px, (min-width: 640px) 90vw, 100vw'
+    : '(min-width: 1024px) 560px, (min-width: 640px) 45vw, 100vw';
+---
+<article class:list={['project-card', `is-${variant}`]} data-kind={p.kind}>
+  <div class="media">
+    {p.cover ? (
+      <Shot src={p.cover.src} alt={p.cover.alt} sizes={sizes} position={p.cover.position} widths={[480, 720, 960, 1280]} />
+    ) : (
+      <div class="media-empty" aria-hidden="true"></div>
+    )}
+  </div>
+  <div class="body">
+    <p class="origin">{p.originLabel}</p>
+    <Heading class="title">{p.title}</Heading>
+    <p class="summary">{p.summary}</p>
+    {p.tags.length > 0 && (
+      <ul class="tags" role="list" aria-label="Características">
+        {p.tags.slice(0, 3).map((t) => <li class="tag">{t}</li>)}
+      </ul>
+    )}
+    <div class="actions">
+      <a class="link" href={`/projetos/${p.slug}/`}>
+        Ver projeto<span class="visually-hidden">: {p.title}</span> <Icon name="arrow" />
+      </a>
+      {p.liveUrl && (
+        <a class="link link-quiet" href={p.liveUrl} target="_blank" rel="noopener">
+          Abrir site<span class="visually-hidden"> {p.title} (abre em nova aba)</span> <Icon name="external" />
+        </a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) ease;
+  }
+  .project-card[hidden] { display: none; }
+  .project-card:hover,
+  .project-card:focus-within {
+    transform: translateY(-4px);
+    border-color: var(--border-strong);
+  }
+  .media {
+    aspect-ratio: 16 / 10;
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .media :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .media-empty { width: 100%; height: 100%; }
+  .body { display: grid; gap: 10px; align-content: start; padding: 22px 24px 16px; }
+  .origin { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.04em; color: var(--accent); }
+  .title { font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.5rem); }
+  .summary { color: var(--text-muted); max-width: 52ch; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 0; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0 20px; margin-top: 2px; }
+  .link-quiet { color: var(--text-muted); text-decoration-color: color-mix(in srgb, var(--text-muted) 40%, transparent); }
+  .link-quiet:hover { color: var(--text); }
+
+  @media (min-width: 900px) {
+    .is-wide { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-rows: none; }
+    .is-wide .media { aspect-ratio: auto; min-height: 100%; border-bottom: 0; border-right: 1px solid var(--border); }
+    .is-wide .body { padding: 32px; align-content: center; }
+  }
+</style>

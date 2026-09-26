@@ -1,0 +1,25 @@
+{
+  "name": "rabik-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/verify-dist.mjs",
+    "build:production": "node scripts/build-production.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "qa": "node scripts/qa-browser.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^24.19.0",
+    "playwright": "^1.63.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.2"
+  }
+}

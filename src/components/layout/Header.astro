@@ -1,0 +1,132 @@
+---
+import Logo from '../brand/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import WhatsAppCta from '../ui/WhatsAppCta.astro';
+import { messages } from '../../config/messages';
+
+const links = [
+  { href: '/#como-funciona', label: 'Como funciona' },
+  { href: '/#entregamos', label: 'O que entregamos' },
+  { href: '/#investimento', label: 'Investimento' },
+  { href: '/#duvidas', label: 'Dúvidas' },
+];
+const ctaLabel = 'Falar sobre meu negócio';
+---
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="brand-link" aria-label="Rabik, página inicial">
+      <Logo />
+    </a>
+
+    <nav class="nav-desktop" aria-label="Principal">
+      <ul role="list">
+        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <WhatsAppCta label={ctaLabel} message={messages.business} class="header-cta" />
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-mobile" data-menu-toggle>
+      <Icon name="menu" class="i-open" />
+      <Icon name="close" class="i-close" />
+      <span>Menu</span>
+    </button>
+  </div>
+
+  <nav id="menu-mobile" class="container nav-mobile" aria-label="Principal (celular)" data-menu hidden>
+    <ul role="list">
+      {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+    <WhatsAppCta label={ctaLabel} message={messages.business} class="menu-cta" />
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 248, 236, 0.94);
+    border-bottom: 1.5px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; gap: 24px; min-height: 72px; }
+  .brand-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: none; border-radius: 8px; }
+  .nav-desktop { display: none; margin-left: auto; }
+  .nav-desktop ul { display: flex; gap: 2px; margin: 0; }
+  .nav-desktop a,
+  .nav-mobile li a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color var(--dur-fast) ease;
+  }
+  .nav-desktop a:hover { background: var(--yellow-soft); }
+  :global(.header-cta) { display: none !important; }
+  :global(.header-cta.btn) { min-height: 44px; padding-inline: 16px; }
+
+  .menu-toggle {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0 14px;
+    background: var(--white);
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .menu-toggle :global(.icon) { width: 20px; height: 20px; }
+  .menu-toggle :global(.i-close),
+  .menu-toggle[aria-expanded='true'] :global(.i-open) { display: none; }
+  .menu-toggle[aria-expanded='true'] :global(.i-close) { display: block; }
+
+  .nav-mobile { padding-block: 8px 20px; background: var(--paper); }
+  .nav-mobile ul { display: grid; gap: 2px; margin: 0 0 12px; }
+  .nav-mobile li a { display: flex; font-size: 1rem; }
+  .nav-mobile li a:hover { background: var(--yellow-soft); }
+  .nav-mobile :global(.menu-cta) { width: 100%; }
+
+  /* Sem JS o botão de menu não funcionaria: os links aparecem direto, com rolagem se precisar. */
+  :global(html:not(.js)) .menu-toggle,
+  :global(html:not(.js)) .nav-mobile { display: none; }
+  :global(html:not(.js)) .nav-desktop { display: block; overflow-x: auto; }
+
+  @media (min-width: 1000px) {
+    .nav-desktop { display: block; }
+    :global(.header-cta) { display: inline-flex !important; }
+    .menu-toggle, .nav-mobile { display: none !important; }
+  }
+</style>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  if (toggle && menu) {
+    const setOpen = (open: boolean, restoreFocus = false) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      if (!open && restoreFocus) toggle.focus();
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
+    });
+    document.addEventListener('click', (e) => {
+      const t = e.target as Node;
+      if (toggle.getAttribute('aria-expanded') === 'true' && !menu.contains(t) && !toggle.contains(t)) setOpen(false);
+    });
+    matchMedia('(min-width: 1000px)').addEventListener('change', (m) => m.matches && setOpen(false));
+  }
+</script>

@@ -1,0 +1,40 @@
+PASS AC-03 sem portfólio, screenshots ou links de projetos — {"links":0,"words":false,"imgs":0}
+PASS AC-03 menu sem "Projetos"
+PASS AC-02 H1 entre 48 e 64 px e até 3 linhas em 1440 — {"size":50,"lines":3}
+PASS AC-02 hero cabe sem rolagem exagerada (1440×900) — 649 px
+PASS AC-04 FAQ de exemplos mostra o CTA
+PASS AC-05 mensagem de exemplos exata — Olá! Conheci a Rabik e gostaria de ver alguns exemplos de sites antes de decidir.
+PASS AC-05 número é o configurado — 5561983645763
+PASS link abre só por clique, em nova aba
+PASS CTA do hero usa a mensagem sobre o negócio — Olá! Conheci a Rabik e gostaria de conversar sobre um site para o meu negócio.
+PASS todos os 10 links de WhatsApp com número e mensagem do contexto — {"cabecalho":1,"menu-mobile":1,"hero":1,"solucoes":3,"investimento":2,"faq":1,"fechamento":1}
+PASS nenhum botão de copiar ou aviso de configuração
+PASS acentos e espaços codificados nos links
+PASS AC-07 site-apresentacao: CTA e mensagem mudam juntos — "Quero um site de apresentação  (abre o WhatsApp em nova aba)"
+PASS AC-07 reformulacao: CTA e mensagem mudam juntos — "Quero melhorar meu site  (abre o WhatsApp em nova aba)"
+PASS AC-07 sob-medida: CTA e mensagem mudam juntos — "Quero explicar meu projeto  (abre o WhatsApp em nova aba)"
+PASS AC-07 nenhum orçamento inventado nas soluções (só o preço configurado na mensagem do básico)
+PASS AC-07 mensagem editada chega ao CTA como texto
+PASS AC-08 preço, entrada, saldo e renovação visíveis
+PASS AC-09 sob medida como orçamento próprio
+PASS CTA de WhatsApp no hero, investimento, FAQ e fechamento — {".hero":true,"#investimento":true,"#duvidas":true,"#comecar":true}
+PASS nada salvo em localStorage
+PASS AC-10 cards de entrega recebem foco visível e mudam a etiqueta — {"focused":true,"outline":"solid","tag":"rgb(32, 81, 189)"}
+PASS AC-10 FAQ abre com teclado
+PASS AC-10 soluções mudam com as setas
+PASS sem erros de console
+PASS AC-01 390×844: título, texto e CTA no primeiro quadro — {"h1":309.40704345703125,"lead":438.3421630859375,"cta":506.6744079589844}
+PASS AC-01 mobile: ilustração depois do texto e do CTA
+PASS menu abre
+PASS menu fecha com Escape e devolve o foco
+PASS botão de menu com área ≥ 44×44 — [103.546875,44]
+PASS AC-12 sem JS: texto, preço, FAQ e navegação acessíveis — {"price":true,"faq":6,"hidden":0,"nav":true,"solutionCta":1}
+PASS AC-12 sem JS: seleção de soluções troca só com CSS
+PASS AC-12 sem JS: FAQ abre
+PASS AC-11 movimento reduzido: conteúdo completo e estável — {"revealReady":false,"hidden":0}
+PASS reflow 320px / — overflow=0
+PASS reflow 320px /privacidade/ — overflow=0
+PASS reflow 640px / — overflow=0
+PASS reflow 640px /privacidade/ — overflow=0
+PASS 404 com retorno à home
+PASS rota /projetos/ não existe

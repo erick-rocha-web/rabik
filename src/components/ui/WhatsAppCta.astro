@@ -1,0 +1,35 @@
+---
+/**
+ * CTA de WhatsApp: link real para wa.me com a mensagem preenchida.
+ * O número vem só de siteConfig.whatsappDigits. Abrir a conversa não envia nada:
+ * a pessoa revisa o texto no WhatsApp e decide se envia.
+ */
+import Icon from './Icon.astro';
+import { siteConfig } from '../../config/site';
+import { buildWhatsAppUrl } from '../../lib/whatsapp';
+
+interface Props {
+  label: string;
+  message: string;
+  variant?: 'primary' | 'secondary' | 'light';
+  class?: string;
+}
+const { label, message, variant = 'primary', class: cls } = Astro.props;
+const digits = siteConfig.whatsappDigits;
+const url = buildWhatsAppUrl(digits, message);
+if (!url) {
+  throw new Error('WhatsApp não configurado ou inválido em src/config/site.ts (whatsappDigits).');
+}
+---
+<a
+  class:list={['btn', `btn-${variant}`, cls]}
+  href={url}
+  target="_blank"
+  rel="noopener"
+  data-wa-link
+  data-wa-digits={digits}
+  data-wa-message={message}
+>
+  {label} <Icon name="arrow" class="icon-arrow" />
+  <span class="visually-hidden"> (abre o WhatsApp em nova aba)</span>
+</a>

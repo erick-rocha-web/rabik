@@ -1,0 +1,78 @@
+---
+import Doodle from '../ui/Doodle.astro';
+
+const situations = [
+  { quote: 'Quais serviços vocês oferecem?', text: 'A resposta está espalhada em várias mensagens.', tone: 'yellow' },
+  { quote: 'Onde fica e como agendo?', text: 'O cliente precisa perguntar o básico.', tone: 'mint' },
+  { quote: 'Posso ver alguns trabalhos?', text: 'As melhores fotos se perdem no feed.', tone: 'coral' },
+];
+---
+<section class="section problem" aria-labelledby="problema-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <h2 id="problema-title" class="section-title">Quando alguém encontra seu negócio, o que ela consegue entender?</h2>
+      <p>
+        Muita empresa depende de uma bio, de mensagens espalhadas e de fotos perdidas no feed. Isso funciona até o
+        cliente precisar de uma informação rápida.
+      </p>
+    </div>
+
+    <ul class="cards" role="list" data-reveal>
+      {situations.map((s, i) => (
+        <li class={`bubble tone-${s.tone}`} style={`--tilt: ${[-1.2, 0.8, -0.6][i]}deg`}>
+          <blockquote>“{s.quote}”</blockquote>
+          <p>{s.text}</p>
+        </li>
+      ))}
+    </ul>
+
+    <p class="closing" data-reveal>
+      Um site organiza essa primeira conversa
+      <span class="circled">antes mesmo do WhatsApp.<Doodle name="circle" class="circle" strokeWidth={2.5} /></span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .cards { display: grid; gap: 16px; margin: 0; }
+  @media (min-width: 760px) { .cards { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+  .bubble {
+    position: relative;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+    padding: 22px 24px 24px;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-md) var(--radius-md) var(--radius-md) 4px;
+    transform: rotate(var(--tilt));
+  }
+  .tone-yellow { background: var(--yellow-soft); }
+  .tone-mint { background: var(--mint-soft); }
+  .tone-coral { background: var(--coral-soft); }
+  blockquote {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.1875rem;
+    line-height: 1.3;
+  }
+  .bubble p { color: var(--ink); font-size: 0.9375rem; opacity: 0.85; }
+  .closing {
+    margin-top: 40px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+    line-height: 2;
+    text-align: center;
+  }
+  .circled { position: relative; display: inline-block; margin-inline: 12px 8px; padding: 0 6px; white-space: nowrap; }
+  .circled :global(.circle) {
+    position: absolute;
+    left: -18px;
+    top: -10px;
+    width: calc(100% + 40px);
+    max-width: none;
+    height: calc(100% + 20px);
+    color: var(--blue);
+    pointer-events: none;
+  }
+</style>

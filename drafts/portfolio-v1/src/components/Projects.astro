@@ -1,0 +1,45 @@
+---
+import ProjectCard from '../projects/ProjectCard.astro';
+import Icon from '../ui/Icon.astro';
+import { projects } from '../../data/projects';
+import { featuredFirst } from '../../lib/project-filters';
+
+const [main, ...rest] = featuredFirst(projects, 3);
+---
+<section id="projetos" class="section" aria-labelledby="projetos-title">
+  <div class="container">
+    <div class="section-head head-row" data-reveal>
+      <div>
+        <p class="eyebrow">Projetos</p>
+        <h2 id="projetos-title" class="section-title">Trabalho real, com a classificação à vista.</h2>
+      </div>
+      <p>Um produto próprio em desenvolvimento e projetos educacionais. Cada um mostra o que foi construído e o que não se pode concluir dele.</p>
+    </div>
+
+    {main && (
+      <div class="grid" data-reveal>
+        <div class="main"><ProjectCard project={main} variant="wide" /></div>
+        {rest.map((p) => <ProjectCard project={p} />)}
+      </div>
+    )}
+
+    {projects.length > 3 && (
+      <p class="more">
+        <a class="btn btn-secondary" href="/projetos/">Ver todos os projetos ({projects.length}) <Icon name="arrow" class="icon-arrow" /></a>
+      </p>
+    )}
+  </div>
+</section>
+
+<style>
+  .head-row { align-items: end; }
+  @media (min-width: 900px) {
+    .head-row { grid-template-columns: 1fr minmax(0, 440px); gap: 40px; }
+  }
+  .grid { display: grid; gap: 24px; }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    .main { grid-column: 1 / -1; display: grid; }
+  }
+  .more { margin-top: 32px; }
+</style>

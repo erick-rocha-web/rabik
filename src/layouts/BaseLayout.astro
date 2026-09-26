@@ -1,0 +1,96 @@
+---
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { siteConfig } from '../config/site';
+const ogDefault = { src: '/og-default.png', width: 1200, height: 630 };
+
+interface Props {
+  title: string;
+  description: string;
+  /** Caminho da página, com barra final (ex.: "/projetos/"). */
+  path: string;
+  noindex?: boolean;
+}
+const { title, description, path, noindex = false } = Astro.props;
+const origin = siteConfig.canonicalOrigin;
+const canonical = origin ? `${origin}${path}` : null;
+const ogImage = origin ? `${origin}${ogDefault.src}` : ogDefault.src;
+const robots = siteConfig.mode !== 'production' || noindex ? 'noindex, nofollow' : null;
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta name="theme-color" content="#fff8ec" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Rabik" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content={String(ogDefault.width)} />
+    <meta property="og:image:height" content={String(ogDefault.height)} />
+    <meta property="og:image:alt" content="Rabik — sites claros para negócios que querem aparecer bem" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline>
+      // Marca JS ativo e prepara a revelação de seções. Se algo falhar, nada fica escondido.
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+          d.classList.add('reveal-ready');
+          document.addEventListener('DOMContentLoaded', function () {
+            var io = new IntersectionObserver(function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+              });
+            }, { rootMargin: '0px 0px -8% 0px' });
+            document.querySelectorAll('[data-reveal]').forEach(function (el) { io.observe(el); });
+          });
+        } catch (err) {
+          d.classList.remove('reveal-ready');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <Header />
+    <main id="conteudo" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: 16px;
+    top: -100px;
+    z-index: 100;
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+    background: var(--action);
+    color: var(--white);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .skip-link:focus { top: 16px; }
+  main:focus { outline: none; }
+</style>

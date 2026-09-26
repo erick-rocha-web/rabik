@@ -1,0 +1,22 @@
+---
+/**
+ * Símbolo da Rabik: três personagens separados, vetorizados a partir de logo_rabik.png
+ * (arquivo original do Erick, na raiz do repositório). Monocromático via currentColor.
+ * Regras da marca: nunca de mãos dadas; não redesenhar nem unir braços, corpos ou bases.
+ */
+import Symbol from '../../assets/brand/rabik-symbol.svg';
+
+interface Props {
+  class?: string;
+  /** Texto acessível; omita quando o símbolo for decorativo. */
+  label?: string;
+}
+const { class: cls, label } = Astro.props;
+---
+<Symbol
+  class:list={['brand-mark', cls]}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  focusable="false"
+/>

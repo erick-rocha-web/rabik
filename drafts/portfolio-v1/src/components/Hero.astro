@@ -1,0 +1,220 @@
+---
+import Icon from '../ui/Icon.astro';
+import Shot from '../ui/Shot.astro';
+import { projects } from '../../data/projects';
+
+// Ordem editorial da vitrine; cada categoria só aparece se houver projeto real e publicável.
+const order = ['Sites', 'Interfaces', 'Interação'] as const;
+const items = order
+  .map((category) => projects.find((p) => p.showcase?.category === category && p.cover))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+const host = (url?: string) => (url ? new URL(url).host : '');
+// Abre em "Interação": é a captura que melhor se lê como interface no tamanho da vitrine.
+const defaultIndex = Math.max(0, items.findIndex((p) => p.showcase?.category === 'Interação'));
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rise" style="--d: 0ms">Rabik · Design e desenvolvimento</p>
+      <h1 id="hero-title" class="rise" style="--d: 60ms">Seu próximo projeto começa a tomar forma aqui.</h1>
+      <p class="lead rise" style="--d: 120ms">
+        Sites para apresentar seu negócio. Interfaces e sistemas para colocar novas ideias em prática. Do primeiro
+        desenho à publicação, com desenvolvimento conduzido por Erick.
+      </p>
+      <div class="actions rise" style="--d: 180ms">
+        <a class="btn btn-primary" href="#projetos">Ver projetos <Icon name="arrow" class="icon-arrow" /></a>
+        <a class="btn btn-secondary" href="#contato">Conversar sobre minha ideia</a>
+      </div>
+    </div>
+
+    {items.length > 0 && (
+      <div class="showcase rise" style="--d: 140ms">
+        {items.length > 1 && (
+          <fieldset class="switch">
+            <legend class="visually-hidden">Escolha um tipo de projeto para ver na vitrine</legend>
+            {items.map((p, i) => (
+              <label>
+                <input type="radio" name="showcase" value={p.slug} checked={i === defaultIndex} data-index={i} />
+                <span>{p.showcase!.category}</span>
+              </label>
+            ))}
+          </fieldset>
+        )}
+
+        <div class="stage">
+          {items.map((p, i) => (
+            <figure class="panel" data-panel={i} data-default={i === defaultIndex ? '' : undefined}>
+              <div class="frame">
+                <div class="chrome" aria-hidden="true">
+                  <span class="dots"><i></i><i></i><i></i></span>
+                  <span class="url">{host(p.liveUrl)}</span>
+                </div>
+                <div class="viewport">
+                  <Shot
+                    src={p.cover!.src}
+                    alt={p.cover!.alt}
+                    sizes="(min-width: 1024px) 520px, (min-width: 640px) 80vw, 100vw"
+                    widths={[480, 720, 1040]}
+                    priority={i === defaultIndex}
+                    position={p.showcase!.category === 'Sites' ? '0% 0%' : '50% 50%'}
+                  />
+                </div>
+              </div>
+              <figcaption>
+                <div class="cap-row">
+                  <p class="cap-title"><strong>{p.title}</strong> <span class="muted">· {p.originLabel}</span></p>
+                  <a class="link" href={`/projetos/${p.slug}/`}>
+                    Explorar projeto<span class="visually-hidden">: {p.title}</span> <Icon name="arrow" />
+                  </a>
+                </div>
+                <p class="cap-line muted">{p.showcase!.line}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: 48px 56px; }
+  .hero-grid {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero { padding-block: 64px 80px; }
+    .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 56px; }
+  }
+  .hero-copy { display: grid; gap: 20px; max-width: 600px; }
+  h1 {
+    font-size: clamp(2.125rem, 1.45rem + 2.4vw, 3.375rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    max-width: 16ch;
+  }
+  .lead { color: var(--text-muted); font-size: 1.0625rem; line-height: 1.65; max-width: 52ch; }
+  @media (min-width: 1024px) { .lead { font-size: 1.125rem; } }
+  .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+
+  /* ---------- Vitrine ---------- */
+  .showcase { position: relative; display: grid; gap: 14px; min-width: 0; }
+  .showcase::before {
+    /* Brilho estático, pequeno e de baixa opacidade, atrás do frame. */
+    content: '';
+    position: absolute;
+    inset: 18% 8% 20% 8%;
+    background: radial-gradient(closest-side, rgba(73, 180, 255, 0.22), transparent);
+    filter: blur(24px);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .switch {
+    display: inline-flex;
+    justify-self: start;
+    gap: 4px;
+    margin: 0;
+    padding: 4px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface);
+  }
+  .switch label { position: relative; }
+  .switch input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+  .switch span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease;
+  }
+  .switch label:hover span { color: var(--text); }
+  .switch input:checked + span { background: var(--accent); color: var(--on-accent); }
+  .switch input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .stage { display: grid; }
+  .panel {
+    grid-area: 1 / 1;
+    display: grid;
+    gap: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 220ms ease, visibility 0s linear 220ms;
+  }
+  /* Funciona só com CSS: sem JS, os rádios continuam trocando a vitrine. */
+  .panel[data-default] { opacity: 1; visibility: visible; }
+  @supports selector(:has(*)) {
+    .showcase:has(.switch input:checked) .panel { opacity: 0; visibility: hidden; }
+    .showcase:has(input[data-index='0']:checked) .panel[data-panel='0'],
+    .showcase:has(input[data-index='1']:checked) .panel[data-panel='1'],
+    .showcase:has(input[data-index='2']:checked) .panel[data-panel='2'] {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 220ms ease, visibility 0s;
+    }
+  }
+
+  .frame {
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    overflow: hidden;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+  }
+  .chrome {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 32px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-raised);
+  }
+  .dots { display: inline-flex; gap: 6px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: #34434f; }
+  .url {
+    flex: 1;
+    min-width: 0;
+    max-width: 260px;
+    margin-inline: auto;
+    padding: 2px 10px;
+    border-radius: 6px;
+    background: var(--bg);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .viewport { aspect-ratio: 16 / 10; background: var(--bg); }
+  .viewport :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  figcaption { display: grid; gap: 2px; }
+  .cap-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; }
+  .cap-title { font-size: 0.9375rem; }
+  .cap-line { font-size: 0.875rem; }
+
+  /* Entrada do hero: curta e só com movimento permitido. */
+  @media (prefers-reduced-motion: no-preference) {
+    .rise { animation: rise 520ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: none; }
+    }
+  }
+</style>
+

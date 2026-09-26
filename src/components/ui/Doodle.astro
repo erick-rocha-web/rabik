@@ -1,0 +1,38 @@
+---
+/**
+ * Rabiscos desenhados à mão (traço próprio, currentColor). Sempre decorativos: aria-hidden.
+ * Usados com parcimônia: seta para o CTA, sublinhado, círculo irregular e pequenas faíscas.
+ */
+interface Props {
+  name: 'arrow-up' | 'underline' | 'circle' | 'spark' | 'squiggle';
+  class?: string;
+  strokeWidth?: number;
+}
+const { name, class: cls = '', strokeWidth = 3 } = Astro.props;
+const shapes: Record<Props['name'], { viewBox: string; d: string[] }> = {
+  // Seta curva que sobe e aponta para cima (para um CTA acima).
+  'arrow-up': { viewBox: '0 0 60 80', d: ['M16 76c-12-14-8-32 6-42 10-7 18-12 22-26', 'M33 14l12-7 3 13'] },
+  underline: { viewBox: '0 0 220 18', d: ['M4 12c34-7 70-9 106-6 30 2 62 3 106-4', 'M40 15c40-4 90-5 130-2'] },
+  circle: {
+    viewBox: '0 0 240 90',
+    d: ['M150 10C96 2 30 12 12 38c-16 24 26 44 94 46 70 2 124-12 126-38 2-24-44-36-104-36-24 0-44 4-60 10'],
+  },
+  spark: { viewBox: '0 0 40 40', d: ['M20 4v10M20 26v10M4 20h10M26 20h10', 'M9 9l5 5M26 26l5 5M31 9l-5 5M14 26l-5 5'] },
+  squiggle: { viewBox: '0 0 120 24', d: ['M4 14c10-12 18 10 28 0s18-12 28 0 18 10 28 0 16-10 28-2'] },
+};
+const s = shapes[name];
+// Sublinhado e círculo acompanham a largura do texto; os demais mantêm a proporção.
+const stretch = name === 'underline' || name === 'circle';
+---
+<svg
+  class:list={['doodle', `doodle-${name}`, cls]}
+  viewBox={s.viewBox}
+  preserveAspectRatio={stretch ? 'none' : undefined}
+  fill="none"
+  stroke="currentColor"
+  stroke-width={strokeWidth}
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>{s.d.map((d) => <path d={d} vector-effect={stretch ? 'non-scaling-stroke' : undefined} />)}</svg>

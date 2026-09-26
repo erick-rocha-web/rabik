@@ -1,0 +1,186 @@
+---
+import BrandMark from '../brand/BrandMark.astro';
+import Doodle from '../ui/Doodle.astro';
+import Icon from '../ui/Icon.astro';
+import WhatsAppCta from '../ui/WhatsAppCta.astro';
+import { messages } from '../../config/messages';
+
+// Itens genéricos do que um site organiza. Não representam nenhum cliente real.
+const checklist = [
+  { label: 'Serviços', color: 'var(--blue)' },
+  { label: 'Fotos', color: 'var(--coral)' },
+  { label: 'Como chegar', color: 'var(--mint)' },
+  { label: 'WhatsApp', color: 'var(--yellow)' },
+];
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container grid">
+    <div class="copy">
+      <p class="eyebrow pop" style="--d: 0ms">Rabik · Sites e soluções digitais</p>
+      <h1 id="hero-title" class="pop" style="--d: 60ms">
+        Seu negócio já faz um bom trabalho. Agora ele precisa{' '}
+        <span class="mark">aparecer bem.<Doodle name="underline" class="mark-line" /></span>
+      </h1>
+      <p class="lead pop" style="--d: 120ms">
+        A Rabik cria sites claros, bonitos e fáceis de usar para mostrar seus serviços, explicar o que você oferece e
+        levar o cliente direto para o WhatsApp.
+      </p>
+      <div class="actions pop" style="--d: 180ms">
+        <WhatsAppCta label="Quero conversar sobre meu negócio" message={messages.business} />
+        <a class="btn btn-secondary" href="#como-funciona">Entender como funciona</a>
+      </div>
+      <p class="aside pop" style="--d: 240ms">
+        <Doodle name="arrow-up" class="aside-arrow" />
+        Sem enrolação, sem painel complicado no pacote básico.
+      </p>
+    </div>
+
+    <div class="art" aria-hidden="true">
+      <div class="sheet">
+        <div class="sheet-top">
+          <span class="sheet-dots"><i></i><i></i><i></i></span>
+          <span class="sheet-title">Briefing do seu negócio</span>
+        </div>
+        <div class="sheet-hero">
+          <span class="bar w70"></span>
+          <span class="bar w45 thin"></span>
+        </div>
+        <ul class="checks">
+          {checklist.map((c) => (
+            <li>
+              <span class="box" style={`background:${c.color}`}><Icon name="check" /></span>
+              <span class="label">{c.label}</span>
+              <span class="bar grow thin"></span>
+            </li>
+          ))}
+        </ul>
+        <span class="fake-btn">Chamar no WhatsApp</span>
+      </div>
+
+      <div class="seal">
+        <BrandMark />
+      </div>
+      <span class="sticker s1">feito com código</span>
+      <span class="sticker s2">sem enrolação</span>
+      <Doodle name="spark" class="spark sp1" />
+      <Doodle name="squiggle" class="squiggle" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: 40px 64px; }
+  .grid { display: grid; gap: 48px; align-items: center; }
+  @media (min-width: 960px) {
+    .hero { padding-block: 56px 88px; }
+    .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 48px; }
+  }
+  .copy { display: grid; gap: 20px; max-width: 680px; }
+  h1 { font-size: clamp(2.25rem, 1.6rem + 2.2vw, 3.125rem); line-height: 1.08; letter-spacing: -0.035em; }
+  .mark { position: relative; display: inline-block; white-space: nowrap; }
+  .mark :global(.mark-line) {
+    position: absolute;
+    left: -2%;
+    bottom: -0.2em;
+    width: 104%;
+    max-width: none;
+    height: 0.36em;
+    color: var(--coral);
+    z-index: -1;
+  }
+  .lead { font-size: 1.0625rem; color: var(--muted); max-width: 52ch; }
+  @media (min-width: 1024px) { .lead { font-size: 1.1875rem; } }
+  .actions { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start; }
+  .aside { position: relative; font-family: var(--font-display); font-weight: 700; font-size: 0.9375rem; padding: 6px 0 0 52px; }
+  .aside :global(.aside-arrow) {
+    position: absolute;
+    left: 6px;
+    bottom: 2px;
+    width: 34px;
+    height: auto;
+    color: var(--coral);
+  }
+
+  /* ---------- Composição gráfica ---------- */
+  .art { position: relative; width: 100%; max-width: 470px; justify-self: center; padding: 36px 20px 30px; }
+  .sheet {
+    position: relative;
+    background: var(--white);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-md);
+    box-shadow: 8px 8px 0 var(--blue);
+    padding: 18px 20px 22px;
+    transform: rotate(-2deg);
+    display: grid;
+    gap: 16px;
+  }
+  .sheet-top { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1.5px dashed var(--line); }
+  .sheet-dots { display: inline-flex; gap: 5px; }
+  .sheet-dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); }
+  .sheet-dots i:first-child { background: var(--coral); }
+  .sheet-title { font-family: var(--font-display); font-weight: 800; font-size: 0.9375rem; }
+  .sheet-hero { display: grid; gap: 8px; padding: 14px; border-radius: 12px; background: var(--yellow-soft); }
+  .bar { display: block; height: 12px; border-radius: 6px; background: var(--ink); opacity: 0.85; }
+  .bar.thin { height: 8px; opacity: 0.18; }
+  .w70 { width: 70%; }
+  .w45 { width: 45%; }
+  .grow { flex: 1; }
+  .checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .checks li { display: flex; align-items: center; gap: 10px; }
+  .box {
+    width: 24px; height: 24px; flex: none;
+    display: grid; place-items: center;
+    border: 2px solid var(--ink); border-radius: 7px;
+  }
+  .box :global(.icon) { width: 15px; height: 15px; stroke-width: 3; }
+  .label { font-weight: 700; font-size: 0.9375rem; min-width: 96px; }
+  .fake-btn {
+    justify-self: start;
+    padding: 9px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--ink);
+    background: var(--mint);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 0.875rem;
+  }
+
+  .seal {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 108px;
+    height: 108px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--yellow);
+    border: 2px solid var(--ink);
+    box-shadow: 3px 3px 0 var(--ink);
+    color: var(--ink);
+    transform: rotate(8deg);
+  }
+  .seal :global(svg) { width: 72%; height: auto; }
+  .sticker { position: absolute; }
+  .s1 { left: -4px; top: 10px; background: var(--mint); transform: rotate(-6deg); }
+  .s2 { right: 6px; bottom: 4px; background: var(--coral); transform: rotate(4deg); }
+  .art :global(.spark) { position: absolute; width: 28px; color: var(--blue-dark); }
+  .art :global(.sp1) { left: 4px; bottom: 36px; }
+  .art :global(.squiggle) { position: absolute; width: 90px; right: 110px; top: 6px; color: var(--coral); }
+
+  @media (max-width: 420px) {
+    .seal { width: 84px; height: 84px; }
+    .label { min-width: 80px; }
+  }
+
+  /* Entrada curta, só com movimento permitido. Nada fica escondido se a animação não rodar. */
+  @media (prefers-reduced-motion: no-preference) {
+    .pop { animation: rise 520ms var(--ease-out) both; animation-delay: var(--d, 0ms); }
+    .sheet { animation: sheet-in 620ms var(--ease-out) both 120ms; }
+    .seal { animation: seal-in 520ms var(--ease-out) both 380ms; }
+    .sticker { animation: rise 420ms var(--ease-out) both 520ms; }
+    @keyframes rise { from { opacity: 0; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
+    @keyframes sheet-in { from { opacity: 0; transform: rotate(-6deg) translateY(16px); } to { opacity: 1; transform: rotate(-2deg); } }
+    @keyframes seal-in { from { opacity: 0; transform: rotate(-20deg) scale(0.8); } to { opacity: 1; transform: rotate(8deg) scale(1); } }
+  }
+</style>

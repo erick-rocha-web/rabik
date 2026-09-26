@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCard from '../../components/projects/ProjectCard.astro';
+import { projects } from '../../data/projects';
+import { KIND_LABELS, countByKind, shouldShowFilters, resultsLabel, type ProjectKind } from '../../lib/project-filters';
+
+const showFilters = shouldShowFilters(projects);
+const counts = countByKind(projects);
+const kinds = (Object.keys(KIND_LABELS) as ProjectKind[]).filter((k) => counts[k] > 0);
+---
+<BaseLayout
+  title="Projetos — Rabik"
+  description="Projetos desenvolvidos por Erick: produto próprio em desenvolvimento e projetos educacionais, com a classificação de cada um."
+  path="/projetos/"
+>
+  <section class="section page" aria-labelledby="page-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Projetos</p>
+        <h1 id="page-title" class="page-title">Projetos</h1>
+        <p>Cada projeto indica o que ele é: produto próprio, trabalho educacional ou projeto pessoal. Nenhum deles é apresentado como cliente.</p>
+      </div>
+
+      {showFilters && (
+        <div class="filters" data-filters hidden>
+          <fieldset>
+            <legend class="visually-hidden">Filtrar projetos por tipo</legend>
+            <label class="chip"><input type="radio" name="kind" value="all" checked /><span>Todos</span></label>
+            {kinds.map((k) => (
+              <label class="chip"><input type="radio" name="kind" value={k} /><span>{KIND_LABELS[k]}</span></label>
+            ))}
+          </fieldset>
+          <p class="small muted" role="status" data-results>{resultsLabel(projects.length)}</p>
+        </div>
+      )}
+
+      <div class="grid" data-grid>
+        {projects.map((p) => <ProjectCard project={p} headingLevel="h2" />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page { padding-top: 48px; }
+  .page-title { font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem); }
+  .grid { display: grid; gap: 24px; }
+  @media (min-width: 720px) { .grid { grid-template-columns: 1fr 1fr; } }
+  .filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+  .filters fieldset { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; border: 0; }
+  .chip { position: relative; }
+  .chip input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .chip span {
+    display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px;
+    border: 1px solid var(--border-strong); border-radius: 999px; font-weight: 600; font-size: 0.9375rem; color: var(--text-muted);
+  }
+  .chip input:checked + span { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .chip input:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; }
+</style>
+
+<script>
+  import { resultsLabel } from '../../lib/project-filters';
+  // Sem JS, os filtros ficam ocultos e todos os projetos continuam visíveis.
+  const filters = document.querySelector<HTMLElement>('[data-filters]');
+  if (filters) {
+    filters.hidden = false;
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-grid] [data-kind]')];
+    const results = filters.querySelector<HTMLElement>('[data-results]')!;
+    filters.addEventListener('change', (e) => {
+      const kind = (e.target as HTMLInputElement).value;
+      let visible = 0;
+      for (const card of cards) {
+        const show = kind === 'all' || card.dataset.kind === kind;
+        card.hidden = !show;
+        if (show) visible++;
+      }
+      results.textContent = resultsLabel(visible);
+    });
+  }
+</script>

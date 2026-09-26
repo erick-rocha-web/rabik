@@ -1,0 +1,57 @@
+---
+import Logo from '../brand/Logo.astro';
+import Doodle from '../ui/Doodle.astro';
+import WhatsAppCta from '../ui/WhatsAppCta.astro';
+import { messages } from '../../config/messages';
+---
+<section id="comecar" class="section final" aria-labelledby="final-title">
+  <div class="container">
+    <div class="box on-dark" data-reveal>
+      <div class="logo-badge" aria-hidden="true"><Logo variant="stacked" /></div>
+      <div class="copy">
+        <h2 id="final-title">Seu cliente não precisa adivinhar o que você faz.</h2>
+        <p class="lead">Vamos organizar essa primeira impressão?</p>
+        <div class="cta">
+          <WhatsAppCta label="Falar sobre meu negócio" message={messages.business} variant="light" />
+          <p class="support small">Você revisa a mensagem antes de enviar.</p>
+        </div>
+      </div>
+      <Doodle name="spark" class="spark s1" />
+      <Doodle name="spark" class="spark s2" strokeWidth={2.5} />
+    </div>
+  </div>
+</section>
+
+<style>
+  .final { padding-bottom: calc(var(--section-space) * 0.75); }
+  /* Azul escuro com texto branco: 7,1:1. */
+  .box {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 28px;
+    align-items: center;
+    padding: 36px 26px;
+    background: var(--blue-dark);
+    color: var(--white);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-lg);
+  }
+  @media (min-width: 760px) {
+    .box { grid-template-columns: 170px 1fr; gap: 44px; padding: 48px 56px; }
+  }
+  .logo-badge { width: 130px; color: var(--white); transform: rotate(-4deg); }
+  @media (min-width: 760px) { .logo-badge { width: 170px; } }
+  .copy { display: grid; gap: 12px; }
+  h2 { font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.625rem); max-width: 20ch; }
+  .lead { font-size: 1.125rem; }
+  .cta { display: grid; gap: 10px; justify-items: start; margin-top: 10px; }
+  .support { opacity: 0.95; }
+  .box :global(.btn-light) { background: var(--white); color: var(--ink); }
+  .box :global(.btn-light:hover) { background: var(--yellow); }
+  .box :global(:focus-visible) { outline-color: var(--yellow); }
+  .box :global(.spark) { position: absolute; color: var(--yellow); pointer-events: none; }
+  .box :global(.s1) { width: 40px; right: 34px; top: 26px; }
+  .box :global(.s2) { display: none; width: 26px; right: 92px; bottom: 30px; color: var(--mint); }
+  @media (min-width: 760px) { .box :global(.s2) { display: block; } }
+</style>

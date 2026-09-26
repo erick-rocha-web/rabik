@@ -1,0 +1,52 @@
+/* Tokens da Rabik — versão 2 (SDD v2 §3.2). Direção clara: não há tema escuro. */
+:root {
+  --paper: #fff8ec;
+  --paper-strong: #fffdf8;
+  --ink: #202431;
+  --muted: #626878;
+  --blue: #3978f6;
+  --blue-dark: #2051bd;
+  --coral: #ff6b5e;
+  --yellow: #ffd35a;
+  --mint: #76d6b4;
+  --line: #e8dfd2;
+  --white: #ffffff;
+  --focus: #1745a4;
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --container: 1160px;
+
+  /* Ajustes de acessibilidade (ver docs/DECISOES.md):
+     branco sobre --blue dá 4,05:1; botões usam um azul um pouco mais fundo (5,14:1). */
+  --action: #2c66e0;
+  --action-hover: var(--blue-dark);
+  /* Borda de controles com 3,4:1 sobre o papel (--line é só decorativa, 1,25:1). */
+  --control-border: #8f8676;
+  --coral-soft: #ffe1dc;
+  --yellow-soft: #fff0c2;
+  --mint-soft: #d9f5ea;
+  --blue-soft: #e3ecfe;
+
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --gutter: 20px;
+  --section-space: 56px;
+  --header-offset: 88px;
+  --shadow-card: 0 1px 0 var(--line), 0 10px 24px -14px rgba(32, 36, 49, 0.25);
+  --shadow-sticker: 3px 3px 0 var(--ink);
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur-base: 200ms;
+
+  color-scheme: light;
+}
+
+@media (min-width: 640px) {
+  :root { --gutter: 32px; }
+}
+@media (min-width: 1024px) {
+  :root { --section-space: 72px; }
+}

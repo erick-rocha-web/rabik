@@ -1,0 +1,93 @@
+---
+import BrandMark from '../brand/BrandMark.astro';
+import Icon from '../ui/Icon.astro';
+
+const items = [
+  { title: 'Apresentação', text: 'Uma primeira impressão profissional, com a personalidade do seu negócio.', icon: 'eye', color: 'var(--blue-dark)', ink: 'var(--white)' },
+  { title: 'Serviços', text: 'O que você faz, explicado de forma organizada e fácil de consultar.', icon: 'list', color: 'var(--coral)', ink: 'var(--ink)' },
+  { title: 'Contato', text: 'Botões para WhatsApp, telefone, redes e localização, conforme o que você precisar.', icon: 'pin', color: 'var(--mint)', ink: 'var(--ink)' },
+  { title: 'Base para crescer', text: 'Uma estrutura que pode evoluir para novas páginas, painel, loja ou integração.', icon: 'sprout', color: 'var(--yellow)', ink: 'var(--ink)' },
+] as const;
+---
+<section id="entregamos" class="section" aria-labelledby="entregamos-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">O que a Rabik entrega</p>
+      <h2 id="entregamos-title" class="section-title">Uma página feita para o seu cliente entender rápido.</h2>
+    </div>
+
+    <ul class="grid" role="list" data-reveal>
+      {items.map((item) => (
+        <li class="item" style={`--c: ${item.color}; --ct: ${item.ink}`} tabindex="0" aria-labelledby={`entrega-${item.icon}`}>
+          <span class="icon-wrap"><Icon name={item.icon} /></span>
+          <h3 id={`entrega-${item.icon}`}><span class="tag">{item.title}</span></h3>
+          <p>{item.text}</p>
+          <BrandMark class="buddy" />
+        </li>
+      ))}
+    </ul>
+
+    <p class="note" data-reveal>O conteúdo final é definido com você. Não usamos fotos, informações ou resultados inventados.</p>
+  </div>
+</section>
+
+<style>
+  .grid { display: grid; gap: 16px; margin: 0; }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1060px) { .grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+  .item {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+    padding: 22px 22px 56px;
+    background: var(--white);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--dur-base) ease, transform var(--dur-base) var(--ease-out);
+  }
+  .item:hover, .item:focus-visible { border-color: var(--ink); transform: translateY(-3px); }
+  .item:focus-visible { outline-offset: 4px; }
+  .icon-wrap {
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 12px;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+  }
+  .icon-wrap :global(.icon) { width: 24px; height: 24px; }
+  h3 { font-size: 1.125rem; }
+  /* Etiqueta muda de cor no hover/foco, com a cor de texto que mantém contraste ≥ 4,5:1 em cada fundo. */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 8px;
+    background: var(--paper);
+    border: 1.5px solid var(--ink);
+    transition: background-color var(--dur-base) ease, color var(--dur-base) ease;
+  }
+  .item:hover .tag, .item:focus-visible .tag { background: var(--c); color: var(--ct); }
+  .item p { color: var(--muted); font-size: 0.9375rem; line-height: 1.55; }
+  .item :global(.buddy) {
+    position: absolute;
+    right: 16px;
+    bottom: 14px;
+    width: 44px;
+    height: auto;
+    color: var(--ink);
+    opacity: 0.35;
+    transform-origin: 50% 100%;
+    transition: transform var(--dur-base) var(--ease-out), opacity var(--dur-base) ease;
+  }
+  .item:hover :global(.buddy), .item:focus-visible :global(.buddy) { opacity: 1; transform: rotate(-7deg); }
+  .note {
+    margin-top: 28px;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    border: 1.5px dashed var(--control-border);
+    color: var(--muted);
+    font-size: 0.9375rem;
+    max-width: 70ch;
+  }
+</style>

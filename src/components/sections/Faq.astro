@@ -1,0 +1,74 @@
+---
+import BrandMark from '../brand/BrandMark.astro';
+import Icon from '../ui/Icon.astro';
+import WhatsAppCta from '../ui/WhatsAppCta.astro';
+import { faq } from '../../data/faq';
+import { messages } from '../../config/messages';
+---
+<section id="duvidas" class="section" aria-labelledby="faq-title">
+  <div class="container layout">
+    <div class="side" data-reveal>
+      <div class="section-head">
+        <p class="eyebrow">Dúvidas</p>
+        <h2 id="faq-title" class="section-title">Perguntas que sempre aparecem.</h2>
+      </div>
+      <BrandMark class="watermark" />
+    </div>
+    <div class="list" data-reveal>
+      {faq.map((item) => (
+        <details class="item">
+          <summary>
+            <span>{item.question}</span>
+            <Icon name="plus" class="chev" />
+          </summary>
+          <div class="answer">
+            <p>{item.answer}</p>
+            {item.whatsapp && (
+              <WhatsAppCta label={item.whatsapp.label} message={messages[item.whatsapp.message]} variant="secondary" />
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  @media (min-width: 960px) {
+    .layout { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 56px; align-items: start; }
+  }
+  .side :global(.watermark) { display: none; width: 180px; color: var(--ink); opacity: 0.12; margin-top: 12px; }
+  @media (min-width: 960px) { .side :global(.watermark) { display: block; } }
+  .list { display: grid; gap: 12px; }
+  .item {
+    background: var(--white);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius-md);
+    transition: border-color var(--dur-fast) ease;
+  }
+  .item[open] { border-color: var(--ink); }
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 60px;
+    padding: 14px 20px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.0625rem;
+    cursor: pointer;
+    list-style: none;
+    border-radius: var(--radius-md);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--blue-dark); }
+  .item :global(.chev) {
+    width: 30px; height: 30px; padding: 5px; flex: none;
+    border-radius: 50%; background: var(--yellow); border: 1.5px solid var(--ink);
+    transition: transform var(--dur-fast) ease;
+  }
+  .item[open] :global(.chev) { transform: rotate(45deg); }
+  .answer { display: grid; gap: 16px; justify-items: start; padding: 0 20px 20px; }
+  .answer p { color: var(--muted); max-width: 64ch; }
+</style>

@@ -1,0 +1,35 @@
+---
+/**
+ * Captura de tela otimizada: AVIF + WebP com srcset, width/height explícitos.
+ * `sizes` deve descrever a largura real exibida para o navegador escolher bem.
+ */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  sizes: string;
+  widths?: number[];
+  class?: string;
+  position?: string;
+  priority?: boolean;
+}
+const { src, alt, sizes, widths, class: cls, position, priority = false } = Astro.props;
+const candidates = (widths ?? [480, 720, 960, 1280, 1440]).filter((w) => w <= src.width);
+if (!candidates.includes(src.width) && src.width < 1440) candidates.push(src.width);
+---
+<Picture
+  src={src}
+  alt={alt}
+  formats={['avif', 'webp']}
+  fallbackFormat="webp"
+  widths={candidates}
+  sizes={sizes}
+  quality={82}
+  class={cls}
+  style={position ? `object-position: ${position}` : undefined}
+  loading={priority ? 'eager' : 'lazy'}
+  decoding={priority ? 'sync' : 'async'}
+  fetchpriority={priority ? 'high' : 'auto'}
+/>

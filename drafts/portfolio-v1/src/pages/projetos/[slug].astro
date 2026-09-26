@@ -1,0 +1,218 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/ui/Icon.astro';
+import Shot from '../../components/ui/Shot.astro';
+import { projects, nextProject, type Project } from '../../data/projects';
+
+export function getStaticPaths() {
+  // `projects` já exclui rascunhos: páginas de projetos sem autorização nunca são geradas.
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+const next = nextProject(p.slug);
+const usedGallery = new Set(p.decisions.map((d) => d.imageIndex).filter((i) => i !== undefined));
+const extraGallery = p.gallery.filter((_, i) => !usedGallery.has(i));
+const checked = p.factsCheckedAt
+  ? new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(p.factsCheckedAt))
+  : null;
+const statusLabel = { 'in-development': 'Em desenvolvimento', demo: 'Demonstração', published: 'Publicado' }[p.status];
+const host = p.liveUrl ? new URL(p.liveUrl).host : '';
+---
+<BaseLayout title={`${p.title} — Projetos Rabik`} description={p.metaDescription} path={`/projetos/${p.slug}/`}>
+  <article class="project">
+    <header class="container head">
+      <nav aria-label="Trilha" class="crumbs small">
+        <a href="/projetos/">Projetos</a> <span aria-hidden="true">/</span> <span aria-current="page">{p.title}</span>
+      </nav>
+      <p class="eyebrow">{p.originLabel}</p>
+      <h1>{p.title}</h1>
+      <p class="summary">{p.summary}</p>
+      <div class="head-actions">
+        {p.liveUrl && (
+          <a class="btn btn-primary" href={p.liveUrl} target="_blank" rel="noopener">
+            {p.liveLabel ?? 'Abrir site'} <Icon name="external" /><span class="visually-hidden"> (abre em nova aba)</span>
+          </a>
+        )}
+        {p.repositoryUrl && (
+          <a class="btn btn-secondary" href={p.repositoryUrl} target="_blank" rel="noopener">
+            <Icon name="github" /> Ver o código<span class="visually-hidden"> no GitHub (abre em nova aba)</span>
+          </a>
+        )}
+      </div>
+    </header>
+
+    {p.cover && (
+      <figure class="container hero-shot">
+        <div class="frame">
+          <div class="chrome" aria-hidden="true"><span class="dots"><i></i><i></i><i></i></span><span class="url">{host}</span></div>
+          <Shot src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1320px) 1280px, 100vw" priority />
+        </div>
+        {checked && <figcaption class="small muted">Captura da interface publicada, feita em {checked}.</figcaption>}
+      </figure>
+    )}
+
+    <div class="container body">
+      <section class="block two-col" aria-labelledby="precisava">
+        <div>
+          <h2 id="precisava">O que o projeto precisava resolver</h2>
+          <p>{p.need}</p>
+        </div>
+        <div>
+          <h2 id="desenvolvido">O que foi desenvolvido</h2>
+          <ul role="list" class="checks">
+            {p.built.map((b) => <li><Icon name="check" /> <span>{b}</span></li>)}
+          </ul>
+        </div>
+      </section>
+
+      <section class="block" aria-labelledby="decisoes">
+        <h2 id="decisoes">Decisões de interface</h2>
+        <div class="decisions">
+          {p.decisions.map((d) => {
+            const img = d.imageIndex !== undefined ? p.gallery[d.imageIndex] : undefined;
+            return img ? (
+              <figure class="decision with-image">
+                <div class="decision-shot">
+                  <Shot src={img.src} alt={img.alt} sizes="(min-width: 1024px) 720px, 100vw" />
+                </div>
+                <figcaption>
+                  <h3>{d.title}</h3>
+                  <p>{d.text}</p>
+                  <p class="small muted">{img.caption}</p>
+                </figcaption>
+              </figure>
+            ) : (
+              <div class="decision card">
+                <h3>{d.title}</h3>
+                <p>{d.text}</p>
+              </div>
+            );
+          })}
+        </div>
+        {extraGallery.map((g) => (
+          <figure class="extra">
+            <Shot src={g.src} alt={g.alt} sizes="(min-width: 1200px) 1160px, 100vw" />
+            <figcaption class="small muted">{g.caption}</figcaption>
+          </figure>
+        ))}
+      </section>
+
+      <section class="block facts" aria-labelledby="ficha">
+        {p.mobile && (
+          <figure class="phone">
+            <Shot src={p.mobile.src} alt={p.mobile.alt} sizes="280px" widths={[280, 390, 560]} />
+            <figcaption class="small muted">No celular (390 px de largura).</figcaption>
+          </figure>
+        )}
+        <div class="sheet">
+          <h2 id="ficha">Ficha do projeto</h2>
+          <dl>
+            <div><dt>Classificação</dt><dd>{p.originLabel}</dd></div>
+            <div><dt>Situação</dt><dd>{statusLabel}</dd></div>
+            <div><dt>Papel do Erick</dt><dd>{p.role}</dd></div>
+            <div>
+              <dt>Tecnologias</dt>
+              <dd>
+                <ul role="list" class="techs">{p.technologies.map((t) => <li class="tag">{t}</li>)}</ul>
+                <span class="small muted">{p.technologiesNote}</span>
+              </dd>
+            </div>
+          </dl>
+          <h3 class="sub">Limites</h3>
+          <ul class="limits">{p.limitations.map((l) => <li>{l}</li>)}</ul>
+          <h3 class="sub">O que isso mostra</h3>
+          <p>{p.learned}</p>
+          {checked && <p class="small muted checked">Informações conferidas em {checked}.</p>}
+        </div>
+      </section>
+
+      <section class="block closing" aria-labelledby="parecido">
+        <div class="cta card">
+          <h2 id="parecido">Tem um projeto parecido em mente?</h2>
+          <a class="btn btn-primary" href="/#contato">Conversar sobre minha ideia <Icon name="arrow" class="icon-arrow" /></a>
+        </div>
+        {next.slug !== p.slug && (
+          <a class="next" href={`/projetos/${next.slug}/`}>
+            <span class="small muted">Próximo projeto</span>
+            <span class="next-title">{next.title} <Icon name="arrow" /></span>
+            <span class="small muted">{next.originLabel}</span>
+          </a>
+        )}
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .head { display: grid; gap: 14px; padding-top: 40px; padding-bottom: 32px; }
+  .crumbs { color: var(--text-muted); display: flex; gap: 8px; align-items: center; }
+  .crumbs a { color: var(--text-muted); min-height: 44px; display: inline-flex; align-items: center; }
+  .crumbs a:hover { color: var(--text); }
+  h1 { font-size: clamp(2.125rem, 1.6rem + 1.8vw, 3rem); letter-spacing: -0.03em; }
+  .summary { font-size: 1.125rem; color: var(--text-muted); max-width: 60ch; }
+  .head-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+  .head-actions :global(.icon) { width: 18px; height: 18px; }
+
+  .container-wide { max-width: calc(var(--container-wide) + 2 * var(--gutter)); margin-inline: auto; padding-inline: var(--gutter); }
+  .hero-shot { display: grid; gap: 10px; }
+  .frame { border: 1px solid var(--border-strong); border-radius: var(--radius-md); overflow: hidden; background: var(--surface); }
+  .frame :global(img) { width: 100%; }
+  .chrome { display: flex; align-items: center; gap: 12px; height: 34px; padding: 0 14px; border-bottom: 1px solid var(--border); background: var(--surface-raised); }
+  .dots { display: inline-flex; gap: 6px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: #34434f; }
+  .url { margin-inline: auto; padding: 2px 12px; border-radius: 6px; background: var(--bg); font-size: 0.8125rem; color: var(--text-muted); }
+
+  .body { display: grid; gap: 0; }
+  .block { padding-block: 56px 0; }
+  .block h2 { font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem); margin-bottom: 14px; }
+  .block p { color: var(--text-muted); max-width: 62ch; }
+  .two-col { display: grid; gap: 36px; }
+  @media (min-width: 900px) { .two-col { grid-template-columns: 1fr 1fr; gap: 56px; } }
+  .checks { display: grid; gap: 10px; margin: 0; }
+  .checks li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; color: var(--text-muted); }
+  .checks :global(.icon) { width: 20px; height: 20px; color: var(--accent); margin-top: 3px; }
+
+  .decisions { display: grid; gap: 20px; }
+  @media (min-width: 900px) { .decisions { grid-template-columns: 1fr 1fr; } }
+  .decision { display: grid; gap: 8px; padding: 22px 24px; align-content: start; }
+  .decision h3, .with-image h3 { font-size: 1.1875rem; }
+  .with-image { grid-column: 1 / -1; display: grid; gap: 20px; align-items: center; }
+  @media (min-width: 900px) { .with-image { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 36px; } }
+  .with-image figcaption { display: grid; gap: 8px; }
+  .decision-shot { border: 1px solid var(--border-strong); border-radius: var(--radius-md); overflow: hidden; }
+  .decision-shot :global(img) { width: 100%; }
+  .extra { display: grid; gap: 10px; margin-top: 28px; }
+  .extra :global(img) { width: 100%; border: 1px solid var(--border-strong); border-radius: var(--radius-md); }
+
+  .facts { display: grid; gap: 36px; align-items: start; }
+  @media (min-width: 900px) { .facts { grid-template-columns: 280px 1fr; gap: 56px; } }
+  .phone { display: grid; gap: 10px; max-width: 280px; justify-self: center; }
+  .phone :global(img) { border: 1px solid var(--border-strong); border-radius: 22px; }
+  .sheet dl { display: grid; gap: 14px; margin: 0 0 28px; }
+  .sheet dl > div { display: grid; gap: 4px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+  @media (min-width: 640px) { .sheet dl > div { grid-template-columns: 180px 1fr; gap: 16px; } }
+  .sheet dt { font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); padding-top: 3px; }
+  .sheet dd { margin: 0; }
+  .techs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
+  .sub { font-size: 1.0625rem; margin: 20px 0 8px; }
+  .limits { margin: 0; padding-left: 20px; color: var(--text-muted); display: grid; gap: 6px; }
+  .checked { margin-top: 16px; }
+
+  .closing { display: grid; gap: 20px; }
+  @media (min-width: 900px) { .closing { grid-template-columns: 1.4fr 1fr; } }
+  .cta { display: grid; gap: 16px; padding: 28px; align-content: center; }
+  .cta h2 { margin: 0; }
+  .cta .btn { justify-self: start; }
+  .next {
+    display: grid; gap: 4px; align-content: center; padding: 24px 28px;
+    border: 1px solid var(--border); border-radius: var(--radius-md); text-decoration: none;
+    transition: border-color var(--dur-base) ease, transform var(--dur-base) var(--ease-out);
+  }
+  .next:hover, .next:focus-visible { border-color: var(--accent); transform: translateY(-3px); }
+  .next-title { display: inline-flex; align-items: center; gap: 8px; font-size: 1.25rem; font-weight: 700; }
+  .next-title :global(.icon) { width: 20px; height: 20px; color: var(--accent); }
+</style>

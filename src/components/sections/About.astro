@@ -1,0 +1,55 @@
+---
+import Logo from '../brand/Logo.astro';
+---
+<section class="section about-wrap" aria-labelledby="sobre-title">
+  <div class="container">
+    <div class="about" data-reveal>
+      <div class="badge" aria-hidden="true">
+        <Logo variant="stacked" />
+      </div>
+      <div class="copy">
+        <h2 id="sobre-title">Seu negócio merece um site à altura do que faz.</h2>
+        <p>
+          A Rabik tem um objetivo simples: criar sites profissionais que mostrem o valor de cada negócio. Páginas com
+          personalidade, serviços bem apresentados e um caminho fácil para o cliente entrar em contato.
+        </p>
+        <p>
+          Cuidamos do visual, da organização e do desenvolvimento para que sua empresa tenha um endereço próprio na
+          internet — bonito, prático e com a sua cara.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-wrap { padding-block: calc(var(--section-space) * 0.5); }
+  /* Coral com texto escuro (5,5:1). Branco sobre coral não passa em contraste. */
+  .about {
+    display: grid;
+    gap: 24px;
+    align-items: center;
+    padding: 28px 24px;
+    background: var(--coral);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-lg);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  @media (min-width: 760px) {
+    .about { grid-template-columns: 200px 1fr; gap: 40px; padding: 36px 44px; }
+  }
+  .badge {
+    width: 160px;
+    padding: 22px 20px;
+    background: var(--paper-strong);
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-md);
+    transform: rotate(-3deg);
+    color: var(--ink);
+  }
+  @media (min-width: 760px) { .badge { width: 190px; } }
+  .copy { display: grid; gap: 12px; }
+  h2 { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); max-width: 22ch; margin-bottom: 4px; }
+  p { font-size: 1.0625rem; max-width: 60ch; }
+</style>
