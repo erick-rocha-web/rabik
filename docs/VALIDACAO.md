@@ -1,5 +1,21 @@
 # Validação — v2 (25/09/2026)
 
+## Favicon com o símbolo (26/09/2026)
+
+| Verificação | Resultado |
+|---|---|
+| Arquivos | `favicon.ico` (PNG embutido em 16, 32 e 48 px), `favicon.svg`, `favicon-96x96.png`, `apple-touch-icon.png` (180 px). `favicon-32.png` (antigo "R") removido e sem referência. |
+| URLs no preview | As quatro respondem 200 com o tipo certo (`image/x-icon`, `image/svg+xml`, `image/png`); conteúdo servido idêntico aos arquivos; `/favicon-32.png` responde 404 |
+| Todas as páginas | `/`, `/privacidade/` e a 404 declaram o mesmo conjunto; `npm run qa` confere que os 4 ícones carregam e decodificam em cada página, numa sessão nova (**43/43**) |
+| Escolha do navegador | Chromium com janela visível e **perfil novo a cada página** (sem cache) pede `/favicon.svg` → 200 nas três páginas |
+| Legibilidade | Cada tamanho foi inspecionado pixel a pixel sobre fundo claro e escuro; o SVG foi renderizado numa barra de abas em 1× e 2×: três personagens separados e reconhecíveis |
+| Separação dos personagens | Medida no original: só se encostam com contorno ≥ 36; o máximo usado é 24. Em 16–48 px as figuras ficam afastadas por inteiro |
+| Produção | Em produção, `robots.txt` libera todo o site (`Allow: /`), incluindo os ícones; no preview, bloqueia tudo de propósito |
+
+Não verificado: aparência no Firefox/Safari e o cache de favicon de navegadores que já tinham visitado o preview (use uma janela anônima ou limpe o cache do site).
+
+---
+
 ## Ajuste de WhatsApp e bloco de objetivos (25/09/2026)
 
 | Verificação | Resultado |

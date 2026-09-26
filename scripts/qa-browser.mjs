@@ -209,6 +209,28 @@ for (const w of [320, 640]) {
   await ctx.close();
 }
 
+// Favicon: mesmo conjunto em todas as páginas; cada arquivo carrega e decodifica (sessão nova, sem cache)
+for (const path of ['/', '/privacidade/', '/nao-existe/']) {
+  ctx = await b.newContext();
+  p = await ctx.newPage();
+  await p.goto(B + path, { waitUntil: 'networkidle' });
+  const icons = await p.evaluate(async () => {
+    const links = [...document.querySelectorAll('link[rel~="icon"], link[rel="apple-touch-icon"]')].map((l) => l.getAttribute('href'));
+    const decoded = await Promise.all(
+      links.map((href) => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i.naturalWidth > 0); i.onerror = () => ok(false); i.src = href; })),
+    );
+    return { links, decoded };
+  });
+  const statuses = await Promise.all(icons.links.map(async (h) => (await p.request.get(B + h)).status()));
+  ok(
+    `favicon em ${path}: ${icons.links.length} ícones carregam e decodificam`,
+    JSON.stringify(icons.links) === JSON.stringify(['/favicon.ico', '/favicon.svg', '/favicon-96x96.png', '/apple-touch-icon.png']) &&
+      icons.decoded.every(Boolean) && statuses.every((s) => s === 200),
+    `${statuses.join(',')}`,
+  );
+  await ctx.close();
+}
+
 // Rotas
 ctx = await b.newContext();
 p = await ctx.newPage();

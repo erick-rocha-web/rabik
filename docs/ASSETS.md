@@ -10,8 +10,10 @@ A v2 não usa screenshots de projetos, fotos de clientes, imagens de banco nem i
 | `src/assets/brand/rabik-logo.svg` | Vetorização fiel de `logo_rabik.png` (potrace, limiar 50%), comparada lado a lado com o original | Logo empilhada: bloco "Por trás da Rabik", CTA final (branca) e rodapé | Da marca | viewBox 928 × 645 |
 | `src/assets/brand/rabik-symbol.svg` | Recorte do trio no original, vetorizado | Cabeçalho, selo do hero, cards de entrega, marca d'água do FAQ, 404 | Da marca | viewBox 516 × 385 |
 | `src/assets/brand/rabik-wordmark.svg` | Recorte de "RABIK" no original, vetorizado | Cabeçalho (ao lado do símbolo) | Da marca | viewBox 928 × 207 |
-| `public/favicon.svg`, `favicon-32.png`, `apple-touch-icon.png` | "R" vetorizado da própria logo, tinta `#202431` sobre amarelo `#ffd35a` | Favicon (o trio perde legibilidade a 16–32 px) | Da marca | 32 / 32 / 180 px |
+| `public/favicon.svg`, `favicon.ico` (16/32/48), `favicon-96x96.png`, `apple-touch-icon.png` (180) | Gerados por `npm run favicons` a partir de `rabik-symbol.svg`: três bonequinhos em tinta `#202431` sobre papel `#fff8ec`, sem a palavra RABIK | Favicon em todas as páginas | Da marca | ver colunas |
 | `public/og-default.png` | Composição local: fundo papel, título curto, logo em cartão, etiquetas | Imagem social/OG | Da marca | 1200 × 630 |
+
+**Favicon:** o desenho não é redesenhado. Em tamanhos pequenos, o mesmo traço recebe um contorno da própria cor (até 24 unidades; os personagens só se encostariam a partir de 36, medido no original). Em 16–48 px, onde a distância entre os pés ficaria abaixo de 1 pixel, as três figuras são afastadas por inteiro, sem alterar nenhuma. De 96 px para cima, o espaçamento é o original.
 
 Todos os SVGs usam `fill="currentColor"`: escuros no papel, brancos no bloco azul. Os três personagens não foram redesenhados, unidos, esticados nem recortados.
 

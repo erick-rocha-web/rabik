@@ -19,6 +19,7 @@ npm run check             # checagem de tipos
 npm run qa                # verificação em navegador; precisa do preview rodando
                           # (primeira vez: npx playwright install chromium)
 npm run build:production  # build final; FALHA enquanto houver pendência bloqueante
+npm run favicons          # regenera os favicons a partir do símbolo da logo
 ```
 
 ## Onde mudar cada coisa (um lugar só)
@@ -33,7 +34,8 @@ npm run build:production  # build final; FALHA enquanto houver pendência bloque
 | Textos das demais seções | `src/components/sections/*.astro` |
 | Cores, raios, largura do container | `src/styles/tokens.css` |
 | Logo | `src/assets/brand/*.svg` (vetorizados de `logo_rabik.png`) |
-| Favicon e imagem social | `public/favicon.svg`, `public/og-default.png` |
+| Favicon | `npm run favicons` (gera `favicon.ico`, `favicon.svg`, `favicon-96x96.png`, `apple-touch-icon.png` em `public/`) |
+| Imagem social | `public/og-default.png` |
 
 ### WhatsApp
 

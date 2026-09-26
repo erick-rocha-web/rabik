@@ -10,7 +10,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
-    "qa": "node scripts/qa-browser.mjs"
+    "qa": "node scripts/qa-browser.mjs",
+    "favicons": "node scripts/make-favicons.mjs"
   },
   "dependencies": {
     "astro": "^7.3.5"

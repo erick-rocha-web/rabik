@@ -23,7 +23,7 @@ PASS AC-10 cards de entrega recebem foco visível e mudam a etiqueta — {"focus
 PASS AC-10 FAQ abre com teclado
 PASS AC-10 soluções mudam com as setas
 PASS sem erros de console
-PASS AC-01 390×844: título, texto e CTA no primeiro quadro — {"h1":309.40704345703125,"lead":438.3421630859375,"cta":506.6744079589844}
+PASS AC-01 390×844: título, texto e CTA no primeiro quadro — {"h1":309.3744201660156,"lead":438.2789611816406,"cta":506.5635681152344}
 PASS AC-01 mobile: ilustração depois do texto e do CTA
 PASS menu abre
 PASS menu fecha com Escape e devolve o foco
@@ -36,5 +36,8 @@ PASS reflow 320px / — overflow=0
 PASS reflow 320px /privacidade/ — overflow=0
 PASS reflow 640px / — overflow=0
 PASS reflow 640px /privacidade/ — overflow=0
+PASS favicon em /: 4 ícones carregam e decodificam — 200,200,200,200
+PASS favicon em /privacidade/: 4 ícones carregam e decodificam — 200,200,200,200
+PASS favicon em /nao-existe/: 4 ícones carregam e decodificam — 200,200,200,200
 PASS 404 com retorno à home
 PASS rota /projetos/ não existe
