@@ -3,7 +3,7 @@
 Landing page da Rabik: sites claros para negócios locais, com conversa pelo WhatsApp.
 Astro 7 + TypeScript, HTML estático, sem backend, sem analytics. Segue `Specs/SDD_Rabik_Claude_Code_versao2.md`.
 
-**Estado:** pronto para revisão, com WhatsApp configurado. Para publicar, resolva `docs/PENDENCIAS.md` (domínio, responsável, hospedagem).
+**Estado:** publicado na Vercel, com WhatsApp, e-mail, responsável e domínio configurados. Veja `docs/PENDENCIAS.md`.
 
 ## Comandos
 
@@ -41,19 +41,20 @@ npm run favicons          # regenera os favicons a partir do símbolo da logo
 
 O número fica só em `src/config/site.ts` (`whatsappDigits`, formato internacional só com dígitos — hoje `5561983645763`). Cada botão gera `https://wa.me/<número>?text=<mensagem codificada>`; as mensagens por contexto (gerais, pacote básico, reformulação, sob medida, exemplos) ficam em `src/config/messages.ts`. Abrir a conversa não envia nada: a pessoa revisa e envia. Nada acrescenta ou remove o nono dígito. Se o número ficar vazio ou inválido, o build falha em vez de publicar botões quebrados.
 
-## Publicação (não foi feita)
+## Publicação
 
-Nada foi publicado, comprado ou provisionado. O build é estático (`dist/`).
+O site está na Vercel (`https://rabikk.vercel.app`), publicado a partir de `main` no GitHub. O build é estático (`dist/`).
 
-1. Resolva as pendências bloqueantes (`src/config/site.ts` e o provedor em `src/pages/privacidade.astro`).
-2. `npm run build:production` — precisa passar sem erros.
-3. Publique a pasta `dist/` numa hospedagem adequada a uso comercial.
+1. `npm test` e `npm run build:production` — precisam passar sem erros.
+2. Commit e `git push origin main`: a Vercel faz o deploy de produção com `npm run build`.
 
 **Cloudflare Pages** (opção documentada para Astro): comando de build `npm run build:production`, pasta `dist`, variável `NODE_VERSION=24`. Confira termos e limites vigentes.
 
 **Vercel:** o plano Hobby é restrito a uso pessoal não comercial.
 
 Em produção com domínio, o build gera `robots.txt` liberando indexação e `sitemap.xml`; em preview, bloqueia tudo e as páginas têm `noindex`.
+
+**Indexação na Vercel (atual: `https://rabikk.vercel.app`):** o `npm run build` entra em modo produção sozinho quando `VERCEL_ENV=production` (deploy de produção); deploys de prévia seguem em preview, com `noindex` e `Disallow: /`. O sitemap é montado a partir do HTML gerado: entram só páginas sem `noindex`, pelo canonical de cada uma. O deploy de produção falha se faltar o responsável do aviso de privacidade (`siteConfig.responsibleDisplayName`). A home tem a tag de verificação do Google Search Console, conferida pelo `verify-dist`.
 
 ## Estrutura
 

@@ -53,6 +53,27 @@ for (const f of html) {
   if (h1 !== 1) problems.push(`${f}: ${h1} elementos h1`);
 }
 
+// Indexação: verificação do Search Console na home e, com sitemap (produção), só páginas indexáveis nele.
+const GOOGLE_VERIFICATION =
+  '<meta name="google-site-verification" content="IwnzcLAJltjM0-NP84PYbF5mswojCSDFhhqkQDb8r5w" />';
+if (!(await readFile(join(DIST, 'index.html'), 'utf8')).includes(GOOGLE_VERIFICATION)) {
+  problems.push('dist/index.html: sem a tag de verificação do Google Search Console');
+}
+const sitemap = await readFile(join(DIST, 'sitemap.xml'), 'utf8').catch(() => null);
+if (sitemap !== null) {
+  const robotsTxt = await readFile(join(DIST, 'robots.txt'), 'utf8');
+  if (/^Disallow: \/\s*$/m.test(robotsTxt)) problems.push('robots.txt bloqueia o site, mas há sitemap');
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  if (locs.length === 0) problems.push('sitemap.xml sem URLs');
+  for (const loc of locs) {
+    const { origin, pathname } = new URL(loc);
+    if (!robotsTxt.includes(`Sitemap: ${origin}/sitemap.xml`)) problems.push(`robots.txt sem Sitemap: ${origin}/sitemap.xml`);
+    const page = await readFile(join(DIST, pathname, 'index.html'), 'utf8').catch(() => '');
+    if (/<meta name="robots" content="[^"]*noindex/i.test(page)) problems.push(`sitemap lista página com noindex: ${loc}`);
+    if (!page.includes(`<link rel="canonical" href="${loc}">`)) problems.push(`sitemap: ${loc} sem canonical igual na página`);
+  }
+}
+
 if (problems.length) {
   console.error(`verify-dist: ${problems.length} problema(s)\n- ${problems.join('\n- ')}`);
   process.exit(1);

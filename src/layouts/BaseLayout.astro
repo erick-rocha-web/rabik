@@ -14,7 +14,8 @@ interface Props {
 }
 const { title, description, path, noindex = false } = Astro.props;
 const origin = siteConfig.canonicalOrigin;
-const canonical = origin ? `${origin}${path}` : null;
+// Canonical só em páginas indexáveis pela própria página: noindex + canonical é sinal contraditório.
+const canonical = origin && !noindex ? `${origin}${path}` : null;
 const ogImage = origin ? `${origin}${ogDefault.src}` : ogDefault.src;
 const robots = siteConfig.mode !== 'production' || noindex ? 'noindex, nofollow' : null;
 ---
@@ -47,6 +48,8 @@ const robots = siteConfig.mode !== 'production' || noindex ? 'noindex, nofollow'
     <meta property="og:image:alt" content="Rabik — sites claros para negócios que querem aparecer bem" />
     {canonical && <meta property="og:url" content={canonical} />}
     <meta name="twitter:card" content="summary_large_image" />
+    <!-- Metadados exclusivos de uma página (ex.: verificação do Search Console na home). -->
+    <slot name="head" />
 
     <script is:inline>
       // Marca JS ativo e prepara a revelação de seções. Se algo falhar, nada fica escondido.

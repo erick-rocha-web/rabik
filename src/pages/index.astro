@@ -10,8 +10,11 @@ import Pricing from '../components/sections/Pricing.astro';
 import Faq from '../components/sections/Faq.astro';
 import FinalCta from '../components/sections/FinalCta.astro';
 import { seo } from '../config/site';
+// Verificação do Google Search Console, publicada exatamente como fornecida pelo Google.
+const googleSiteVerification = '<meta name="google-site-verification" content="IwnzcLAJltjM0-NP84PYbF5mswojCSDFhhqkQDb8r5w" />';
 ---
 <BaseLayout title={seo.homeTitle} description={seo.homeDescription} path="/">
+  <Fragment slot="head" set:html={googleSiteVerification} />
   <Hero />
   <Problem />
   <Delivery />

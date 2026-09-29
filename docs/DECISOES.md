@@ -32,5 +32,17 @@
 | Astro 7 + TypeScript, HTML estático, sem backend/CMS/analytics | Continua atendendo o SDD v2 §19. |
 | Contatos da Rabik como `null` até confirmação | O WhatsApp do portfólio pessoal não foi confirmado como comercial. |
 | Produção falha sem WhatsApp, domínio e responsável | SDD v2 §15 e §20. |
+
+## Indexação no Google (29/09/2026)
+
+| Decisão | Motivo | Como reverter |
+|---|---|---|
+| `canonicalOrigin` = `https://rabikk.vercel.app` | É o endereço público atual. Ao trocar de domínio, mude só esse campo (canonical, sitemap, robots e OG acompanham). | `src/config/site.ts`. |
+| Deploy de produção da Vercel (`VERCEL_ENV=production`) conta como produção | A Vercel roda `npm run build`, que ficava em preview e publicava `noindex` e `Disallow: /`. Prévias da Vercel e builds locais continuam em preview. `RABIK_MODE`, se definida, prevalece. | `resolveMode` em `src/config/site.ts`. |
+| Responsável continua bloqueando o build de produção | Um `noindex` em `/privacidade/` não completa o aviso. Enquanto `responsibleDisplayName` estiver vazio, o deploy de produção falha e a Vercel mantém no ar o deploy anterior. Prévias e builds locais seguem com aviso. | `validate.ts`. |
+| Hospedagem informada no aviso: Vercel | Confirmado pelas respostas do site publicado (`Server: Vercel`, `X-Vercel-Id`). | `privacidade.astro`. |
+| Sitemap gerado a partir do HTML construído | Só entram páginas sem `noindex`, pelo canonical delas. Não há rotas inventadas nem âncoras. | `astro.config.ts`. |
+| Páginas com `noindex` não emitem canonical nem `og:url` | `noindex` + canonical é sinal contraditório; o 404 apontava para `/404/`, que não existe. | `BaseLayout.astro`. |
+| Verificação do Search Console só na home, com o código exato do Google | Inserida por `set:html` para sair byte a byte como fornecida; o `verify-dist` falha se ela sumir. | `src/pages/index.astro`. |
 | Logo vetorizada a partir do PNG, sempre via `currentColor` | Sem borda branca, sem alterar os personagens. |
 | Revelação de seções só depois que o script confirma o IntersectionObserver | Sem JS ou com movimento reduzido, nada fica escondido. |

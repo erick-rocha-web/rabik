@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import type { AstroIntegration } from 'astro';
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { siteConfig } from './src/config/site';
 import { validateSiteConfig } from './src/config/validate';
 
@@ -30,11 +30,16 @@ function rabikSite(): AstroIntegration {
           : 'User-agent: *\nDisallow: /\n';
         await writeFile(new URL('robots.txt', dir), robots);
         if (!indexable) return;
-        const urls = pages
-          .map((p) => p.pathname)
-          .filter((p) => p !== '404/' && p !== '404')
-          .map((p) => `  <url><loc>${origin}/${p}</loc></url>`)
-          .join('\n');
+        // Só entram páginas geradas, sem noindex, com canonical próprio neste domínio.
+        const locs = new Set<string>();
+        for (const { pathname } of pages) {
+          const file = pathname === '' ? 'index.html' : `${pathname.replace(/\/$/, '')}/index.html`;
+          const html = await readFile(new URL(file, dir), 'utf8').catch(() => null);
+          if (html === null || /<meta name="robots" content="[^"]*noindex/i.test(html)) continue;
+          const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
+          if (canonical?.startsWith(`${origin}/`)) locs.add(canonical);
+        }
+        const urls = [...locs].sort().map((loc) => `  <url><loc>${loc}</loc></url>`).join('\n');
         await writeFile(
           new URL('sitemap.xml', dir),
           `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`,

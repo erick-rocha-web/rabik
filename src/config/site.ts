@@ -21,18 +21,23 @@ export interface SiteConfig {
   responsibleDisplayName: string | null;
 }
 
-/** O modo vem da variável RABIK_MODE (definida por `npm run build:production`). */
-export function resolveMode(value: string | undefined): SiteMode {
-  return value === 'production' ? 'production' : 'preview';
+/**
+ * O modo vem da variável RABIK_MODE (definida por `npm run build:production`). Sem ela, só o deploy de
+ * produção da Vercel (VERCEL_ENV=production) é produção; deploys de prévia e builds locais ficam em
+ * preview (noindex).
+ */
+export function resolveMode(value: string | undefined, vercelEnv?: string): SiteMode {
+  if (value) return value === 'production' ? 'production' : 'preview';
+  return vercelEnv === 'production' ? 'production' : 'preview';
 }
 
 export const siteConfig: SiteConfig = {
   brand: 'Rabik',
-  mode: resolveMode(process.env.RABIK_MODE),
-  canonicalOrigin: null,
+  mode: resolveMode(process.env.RABIK_MODE, process.env.VERCEL_ENV),
+  canonicalOrigin: 'https://rabikk.vercel.app', // endereço público atual (Vercel)
   whatsappDigits: '5561983645763', // +55 61 98364-5763, confirmado pelo Erick
-  contactEmail: null,
-  responsibleDisplayName: null,
+  contactEmail: 'rabik.digital@gmail.com', // confirmado pelo Erick
+  responsibleDisplayName: 'Erick Roberto Araújo Rocha', // confirmado pelo Erick
 };
 
 export const seo = {

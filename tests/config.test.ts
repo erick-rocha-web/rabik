@@ -17,6 +17,13 @@ describe('modo', () => {
     expect(resolveMode(undefined)).toBe('preview');
     expect(resolveMode('prod')).toBe('preview');
   });
+
+  it('na Vercel, só o deploy de produção é produção', () => {
+    expect(resolveMode(undefined, 'production')).toBe('production');
+    expect(resolveMode(undefined, 'preview')).toBe('preview');
+    expect(resolveMode(undefined, 'development')).toBe('preview');
+    expect(resolveMode('preview', 'production')).toBe('preview');
+  });
 });
 
 describe('validateSiteConfig', () => {
@@ -58,7 +65,9 @@ describe('configuração atual (AC-20)', () => {
     // conscientemente — ele existe para impedir que um número de prospect entre por engano.
     expect(siteConfig.whatsappDigits).toBe('5561983645763'); // +55 61 98364-5763, confirmado pelo Erick
     expect(validateSiteConfig({ ...siteConfig, mode: 'preview' }).errors).toEqual([]);
-    expect(siteConfig.contactEmail).toBeNull();
-    expect(siteConfig.canonicalOrigin).toBeNull();
+    expect(siteConfig.contactEmail).toBe('rabik.digital@gmail.com'); // confirmado pelo Erick
+    expect(siteConfig.responsibleDisplayName).toBe('Erick Roberto Araújo Rocha'); // confirmado pelo Erick
+    expect(validateSiteConfig({ ...siteConfig, mode: 'production' })).toEqual({ errors: [], warnings: [] });
+    expect(siteConfig.canonicalOrigin).toBe('https://rabikk.vercel.app');
   });
 });
